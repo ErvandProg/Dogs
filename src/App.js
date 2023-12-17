@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Header from "./components/Header.jsx";
+import Photos from "./components/Photos.jsx";
 
 export default function App() {
 	let [dogs, setDogs] = useState([]);
-	let names = randomBreeds(10, dogs);
+	let names = randomBreeds(5, dogs);
 
 	useEffect(() => {
 		fetch(`https://dog.ceo/api/breeds/list/all`).then(res => {
@@ -20,12 +21,18 @@ export default function App() {
 
 		for (let index = 0; index < quantity; index++) {
 			let rand = Math.floor(Math.random() * array.length);
-			randomNums.push(rand);
+			if (randomNums.find((el) => el === rand) === undefined) {
+				randomNums.push(rand);
+			}
 		}
 
-		for (let index = 0; index < randomNums.length; index++) {
-			newArray.push(array[randomNums[index]]);
-		}
+		newArray = randomNums.map(index => {
+			if (array[index]) {
+				const word = array[index];
+				return word[0].toUpperCase() + word.slice(1);
+			}
+			return "";
+		});
 
 		return newArray;
 	};
@@ -33,6 +40,7 @@ export default function App() {
 	return (
 		<>
 			<Header dogs={names} />
+			<Photos dogs={names} />
 		</>
 	);
 }
